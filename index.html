@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>宇宙一のもみほぐし、通称「飛ぶぞ」｜Basecamp 予約</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Yusei+Magic&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* 方針：イラストと同じ「太い線のまんが」。色はイラストから拾った5色のベタ塗り。
+     グラデーション・光彩・ぼかした影は使わない。影はずらしたベタ1色だけ。 */
+  :root {
+    --wall: #e6e2ee;      /* イラストの壁 */
+    --ink: #1a1f3c;       /* 線と夜空 */
+    --alien: #7cc6e2;     /* 青い宇宙人 */
+    --guest: #b9e08f;     /* 緑のお客さん */
+    --star: #ffd338;      /* 星 */
+    --blanket: #8a5a36;   /* 毛布 */
+    --white: #fffdf7;
+    --line: 3px solid var(--ink);
+    --pop: 6px 6px 0 var(--ink);
+    --display: "Dela Gothic One", "Yu Gothic", sans-serif;
+    --hand: "Yusei Magic", "Yu Gothic", sans-serif;
+    --body: "Zen Maru Gothic", "Yu Gothic", "Hiragino Sans", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--wall);
+    color: var(--ink);
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.85;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  .topbar { background: var(--ink); color: var(--white); font-size: 12px; letter-spacing: .16em; }
+  .topbar .wrap { display: flex; justify-content: space-between; padding-top: 9px; padding-bottom: 9px; }
+  .topbar a { color: var(--star); text-decoration: none; font-weight: 700; }
+
+  /* 冒頭 */
+  .hero { padding: 40px 0 56px; }
+  .hero .label {
+    display: inline-block; background: var(--star); border: var(--line);
+    padding: 2px 14px; font-weight: 700; font-size: 13px; transform: rotate(-2deg);
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(40px, 10.5vw, 104px);
+    line-height: 1.08;
+    margin: 14px 0 22px;
+    letter-spacing: -.01em;
+  }
+  .hero h1 .ln { display: block; transition: opacity 1.2s ease, transform 1.2s ease; }
+  .hero h1 .ln:nth-child(2) { transition-delay: .9s; }
+  .hero h1 .ln:nth-child(3) { transition-delay: 1.8s; }
+  .hero h1 small { font-family: var(--hand); font-size: .3em; margin-right: .5em; vertical-align: .5em; }
+  .wait .hero h1 .ln { opacity: 0; transform: translateY(.35em); transition: none; }
+  .hero h1 .fly {
+    display: inline-block;
+    background: var(--ink); color: var(--star);
+    padding: 0 .16em .06em; transform: rotate(-3deg) translateY(-.04em);
+  }
+  .scene { position: relative; margin: 0; border: var(--line); box-shadow: var(--pop); background: var(--white); container-type: inline-size; }
+  .scene img, .scene video { display: block; width: 100%; height: auto; }
+
+  /* 予約したときのロケット（終わるか、画面を押すと消える） */
+  .intro { position: fixed; inset: 0; z-index: 10; background: var(--ink); display: grid; place-items: center; }
+  .intro video { width: 100%; height: 100%; object-fit: cover; }
+  .intro button {
+    position: absolute; right: 16px; bottom: 16px;
+    background: var(--star); color: var(--ink); border: var(--line); box-shadow: 4px 4px 0 var(--ink);
+    font-family: var(--body); font-weight: 700; font-size: 14px; padding: 8px 18px; cursor: pointer;
+  }
+  .intro[hidden] { display: none; }
+  .scene .say {
+    /* 元の絵の吹き出し（効果をうたう文）を消した跡を、すき間なく覆う。位置と大きさを変えない */
+    position: absolute; left: 57.2%; top: 6.8%; width: 27.8%; height: 22.2%;
+    background: var(--white); border: var(--line); border-radius: 22% / 34%;
+    display: grid; place-items: center;
+    font-family: var(--hand); font-size: 4.6cqw; line-height: 1.15; text-align: center;
+  }
+  .hero .below { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; margin-top: 30px; }
+  .hero .below p { margin: 0; max-width: 30em; }
+  .info { display: grid; grid-template-columns: repeat(4, 1fr); margin: 34px 0 0; background: var(--white); border: var(--line); box-shadow: var(--pop); }
+  .info div { padding: 14px 16px 16px; }
+  .info div + div { border-left: var(--line); }
+  .info dt { font-family: var(--hand); font-size: 14px; }
+  .info dd { margin: 0; font-family: var(--display); font-size: 24px; line-height: 1.3; }
+  .info dd small { display: block; font-family: var(--body); font-weight: 700; font-size: 12.5px; }
+  .btn {
+    display: inline-block; background: var(--star); color: var(--ink);
+    font-family: var(--display); font-size: 20px; text-decoration: none;
+    border: var(--line); box-shadow: var(--pop); padding: 12px 30px; cursor: pointer;
+  }
+  .btn:hover, .btn:focus-visible { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--ink); }
+  :focus-visible { outline: 3px solid var(--blanket); outline-offset: 3px; }
+
+  section { padding: 60px 0; }
+  h2 { font-family: var(--display); font-weight: 400; font-size: clamp(28px, 6vw, 44px); line-height: 1.2; margin: 0 0 30px; }
+  h2 small { display: block; font-family: var(--hand); font-size: 16px; }
+
+  /* 何をするか */
+  .what { padding-top: 0; }
+  .what-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+  .points { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .points li { background: var(--white); border: var(--line); padding: 12px 10px; font-weight: 700; display: flex; align-items: center; gap: 10px; line-height: 1.3; }
+  .points b { flex: none; width: 34px; height: 34px; border: var(--line); border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 400; }
+  .what-note { margin: 20px 0 24px; font-family: var(--hand); font-size: 18px; }
+
+  /* メニュー（夜空） */
+  .night { background: var(--ink); color: var(--white); position: relative; overflow: hidden; }
+  .night .stars span { position: absolute; color: var(--star); font-size: 18px; line-height: 1; }
+  .menu { position: relative; background: var(--white); color: var(--ink); border: var(--line); border-color: var(--white); outline: 3px solid var(--ink); outline-offset: -9px; padding: 34px 28px 30px; }
+  .menu .no { font-family: var(--hand); font-size: 15px; }
+  .menu h3 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 6.4vw, 54px); line-height: 1.2; margin: 4px 0 14px; }
+  .menu p { margin: 0 0 6px; }
+  .menu .tiny { font-size: 13px; }
+  .staff { display: flex; align-items: center; gap: 16px; margin: 20px 0 0; }
+  .staff .who { flex: none; background: var(--alien); border: var(--line); padding: 6px 12px; font-size: 12px; font-weight: 700; line-height: 1.3; text-align: center; transform: rotate(-3deg); }
+  .staff .who b { display: block; font-family: var(--display); font-weight: 400; font-size: 20px; }
+  .staff p { margin: 0; font-family: var(--hand); font-size: 22px; line-height: 1.4; }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin: 22px 0 0; border-top: var(--line); }
+  .facts div { padding: 14px 12px 0 0; }
+  .facts dt { font-family: var(--hand); font-size: 14px; }
+  .facts dd { margin: 0; font-weight: 700; }
+
+  /* コース（搭乗券） */
+  .passes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .pass { background: var(--white); border: var(--line); box-shadow: var(--pop); display: grid; grid-template-rows: auto 1fr auto; }
+  .pass:nth-child(2) { transform: rotate(1.2deg); }
+  .pass:nth-child(3) { transform: rotate(-1deg); }
+  .pass .head { padding: 8px 14px; border-bottom: var(--line); font-size: 11px; letter-spacing: .22em; font-weight: 700; display: flex; justify-content: space-between; }
+  .pass:nth-child(1) .head { background: var(--alien); }
+  .pass:nth-child(2) .head { background: var(--star); }
+  .pass:nth-child(3) .head { background: var(--guest); }
+  .pass .body { padding: 16px 16px 14px; }
+  .pass h3 { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1.15; margin: 0 0 8px; }
+  .pass p { margin: 0; font-size: 14.5px; line-height: 1.7; }
+  .pass .foot { border-top: 3px dashed var(--ink); padding: 10px 16px; font-weight: 700; display: flex; justify-content: space-between; gap: 8px; font-size: 14px; }
+
+  /* 流れ（カウントダウン） */
+  .count { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .count li { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center; padding: 16px 0; border-top: var(--line); }
+  .count li:last-child { border-bottom: var(--line); }
+  .count .n { font-family: var(--display); font-size: 62px; line-height: 1; text-align: center; }
+  .count li:last-child .n { font-size: 26px; background: var(--star); border: var(--line); padding: 14px 0; transform: rotate(-4deg); }
+  .count strong { display: block; font-size: 18px; }
+  .count span.d { font-size: 15px; }
+
+  /* 注意 */
+  .notice { background: var(--white); border: var(--line); box-shadow: var(--pop); padding: 26px 26px 24px; }
+  .notice h3 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0 0 10px; }
+  .notice h3 mark { background: var(--star); padding: 0 .3em; }
+  .notice ul { margin: 0; padding-left: 1.3em; font-size: 15px; }
+  .notice li + li { margin-top: 6px; }
+
+  /* 質問 */
+  .faq { max-width: 680px; }
+  details { border-top: var(--line); padding: 14px 0; }
+  details:last-child { border-bottom: var(--line); }
+  summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "✦"; }
+  details[open] summary::after { content: "✧"; }
+  details p { margin: 8px 0 0; font-size: 15px; }
+
+  /* 予約 */
+  #reserve { background: var(--guest); border-top: var(--line); }
+  form { display: grid; gap: 22px; max-width: 580px; background: var(--white); border: var(--line); box-shadow: var(--pop); padding: 28px 24px; }
+  label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  input[type=text], input[type=date], select, textarea {
+    width: 100%; font: inherit; color: var(--ink); background: var(--white);
+    border: var(--line); border-radius: 0; padding: 10px 12px;
+  }
+  .check { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; font-size: 15px; line-height: 1.7; }
+  .check input { width: 22px; height: 22px; margin-top: 3px; accent-color: var(--ink); flex: none; }
+  #result { display: none; max-width: 580px; margin-top: 30px; padding: 20px 22px; background: var(--white); border: 3px dashed var(--ink); white-space: pre-wrap; font-size: 15px; }
+  #actions { display: none; margin-top: 20px; }
+  #actions p { font-size: 14px; margin: 14px 0 0; max-width: 580px; }
+  .btn.dm { margin: 0 14px 12px 0; }
+  .btn.sub { background: var(--white); font-size: 16px; }
+
+  footer { background: var(--ink); color: var(--white); font-size: 12.5px; padding: 30px 0; line-height: 1.8; }
+  footer p { margin: 0 0 4px; }
+
+  @media (max-width: 700px) {
+    .hero .below, .passes { grid-template-columns: 1fr; }
+    .what-grid { grid-template-columns: 1fr; gap: 24px; }
+    .info { grid-template-columns: 1fr 1fr; }
+    .info div:nth-child(3) { border-left: 0; }
+    .info div:nth-child(n+3) { border-top: var(--line); }
+    .info dd { font-size: 20px; }
+    .facts { grid-template-columns: 1fr; }
+    .facts div { border-bottom: 1px solid var(--ink); padding: 10px 0; }
+    .pass:nth-child(n) { transform: none; }
+    .count li { grid-template-columns: 64px 1fr; gap: 14px; }
+    .count .n { font-size: 44px; }
+    .count li:last-child .n { font-size: 17px; }
+    .menu { padding: 28px 20px 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<div class="intro" id="intro" hidden>
+  <video id="rocket" src="img/rocket.mp4" poster="img/rocket-poster.jpg" muted playsinline preload="auto" aria-label="ロケットが雲をつきぬけて飛んでいくアニメーション"></video>
+  <button type="button" id="skip">スキップ</button>
+</div>
+
+<div class="topbar">
+  <div class="wrap"><span>BASECAMP 利用者限定</span><a href="#reserve">予約 ↓</a></div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="label">手もみ・ボディケア（全身もみほぐし）</span>
+    <h1><span class="ln">宇宙一の</span><span class="ln">もみほぐし、</span><span class="ln"><small>通称</small><span class="fly">飛ぶぞ。</span></span></h1>
+    <figure class="scene">
+      <img src="img/hero.webp" width="1536" height="1024" alt="白衣を着た青い宇宙人が、寝そべった緑の宇宙人の背中をほぐしているイラスト">
+      <div class="say" aria-hidden="true">飛ぶぞ〜</div>
+    </figure>
+    <div class="below">
+      <p><strong>ベッドにうつぶせで寝てもらい、手で背中や肩まわりをもみほぐします。</strong>場所は Basecamp の中。お礼は「おごり」「お金」「ご自由に」の3つから。※ 実際には飛びません。</p>
+      <a class="btn" href="#reserve">予約する</a>
+    </div>
+    <dl class="info">
+      <div><dt>時間</dt><dd>最大30分</dd></div>
+      <div><dt>やってる日</dt><dd>毎日</dd></div>
+      <div><dt>場所</dt><dd>Basecamp の中<small>やる場所は指定できます</small></dd></div>
+      <div><dt>担当</dt><dd>キンさん</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section class="what">
+  <div class="wrap">
+    <h2><small>何をしてくれるの？</small>手で、もみほぐします</h2>
+    <div class="what-grid">
+      <figure class="scene">
+        <img src="img/point.webp" width="1224" height="1285" alt="宇宙人の全身図。頭、肩、背中、腰、手、ひざ下、足の甲に色つきの点があり、白衣の小さな宇宙人が「このあたりをやさしく押してみましょう」と指し棒で示している">
+      </figure>
+      <div>
+        <ol class="points">
+          <li><b style="background:#f0708f">1</b>頭・顔</li>
+          <li><b style="background:#5b9bea">2</b>首・肩</li>
+          <li><b style="background:#6fbf73">3</b>背中</li>
+          <li><b style="background:#f4a93b">4</b>腰</li>
+          <li><b style="background:#a274d8">5</b>腕・手</li>
+          <li><b style="background:#3fb1b5">6</b>脚・足</li>
+        </ol>
+        <p class="what-note">ベッドに寝てもらって、手でやさしく。服は着たまま、オイルや道具は使いません。</p>
+        <a class="btn" href="#reserve">予約する</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="night">
+  <div class="stars" aria-hidden="true">
+    <span style="left:6%;top:14%">✦</span><span style="left:88%;top:10%">✦</span><span style="left:94%;top:62%">✧</span>
+    <span style="left:3%;top:78%">✧</span><span style="left:52%;top:5%">✧</span><span style="left:71%;top:91%">✦</span>
+  </div>
+  <div class="wrap">
+    <h2><small>メニューはこれひとつ</small>サービスメニュー</h2>
+    <div class="menu">
+      <span class="no">MENU 01</span>
+      <h3>宇宙一のもみほぐし、<br>通称「飛ぶぞ」</h3>
+      <p data-fill="menu"></p>
+      <p class="tiny">※「宇宙一」「飛ぶ」は気分を表した名前です。ほかと比べた結果や、体への効果を示すものではありません。</p>
+      <div class="staff"><span class="who">担当<b>キンさん</b></span><p>「俺の手で、宇宙まで飛ばします」</p></div>
+      <dl class="facts">
+        <div><dt>時間</dt><dd data-fill="time"></dd></div>
+        <div><dt>場所</dt><dd>Basecamp の中（指定できます）</dd></div>
+        <div><dt>力加減</dt><dd>やさしめ。途中で変えられます</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2><small>お礼の形を選ぶ</small>搭乗コース</h2>
+    <div class="passes">
+      <div class="pass"><div class="head"><span>BOARDING PASS</span><span>A</span></div><div class="body"><h3>おごり</h3><p>飲みもの・ごはんなどを1つおごってください。</p></div><div class="foot"><span>お礼</span><span data-fill="course1"></span></div></div>
+      <div class="pass"><div class="head"><span>BOARDING PASS</span><span>B</span></div><div class="body"><h3>お金</h3><p>金額はその場で相談して決めます。希望の金額を予約フォームに書いてください。</p></div><div class="foot"><span>お礼</span><span data-fill="course2"></span></div></div>
+      <div class="pass"><div class="head"><span>BOARDING PASS</span><span>C</span></div><div class="body"><h3>ご自由に</h3><p>お礼の形はおまかせします。</p></div><div class="foot"><span>お礼</span><span data-fill="course3"></span></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2><small>発射までの</small>カウントダウン</h2>
+    <ol class="count">
+      <li><span class="n">3</span><div><strong>予約する</strong><span class="d">下のフォームに希望の日時・場所・コースを入力します。</span></div></li>
+      <li><span class="n">2</span><div><strong>予約内容を送る</strong><span class="d">「インスタのDMで送る」を押して、キンさん（@kinkinkikinkin）に送ります。</span></div></li>
+      <li><span class="n">1</span><div><strong>当日 Basecamp へ</strong><span class="d">体調と力加減の希望を聞いてから始めます。</span></div></li>
+      <li><span class="n">発射</span><div><strong>飛ぶぞ</strong><span class="d">※ 実際には飛びません。</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="notice">
+      <h3><mark>詳細</mark></h3>
+      <ul>
+        <li>施術者は<strong>国家資格（あん摩マッサージ指圧師など）を持っていません。</strong></li>
+        <li>これは<strong>治療ではありません。</strong>病気やけが、体の症状をよくすることを目的としたものではありません。</li>
+        <li>次の方はお受けできません：持病のある方、通院中の方、妊娠中の方、けがや痛み・しびれのある方、発熱など体調のすぐれない方、飲酒後の方。</li>
+        <li>途中で違和感があれば、すぐにお伝えください。その場で中止します。</li>
+        <li>受けたあとに体の異常を感じたら、担当者に知らせ、早めに医療機関を受診してください。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2><small>気になること</small>よくある質問</h2>
+    <div class="faq">
+      <div>
+        <details><summary>誰でも予約できますか？</summary><p>Basecamp を利用している方に限ります。</p></details>
+        <details><summary>何をするんですか？</summary><p>ベッドにうつぶせになってもらい、手で頭・首肩・背中・腰・腕・脚をやさしくもみほぐします。</p></details>
+        <details><summary>本当に飛びますか？</summary><p>飛びません。名前です。</p></details>
+        <details><summary>いつ、どこでやっていますか？</summary><p>毎日やっています。場所は Basecamp の中で、やってほしい場所を予約のときに指定してください。1回は最大30分です。</p></details>
+        <details><summary>料金はいくらですか？</summary><p>決まった料金表はありません。お金コースは、その場で相談して決めます。予約フォームに希望の金額を書いておけます。</p></details>
+        <details><summary>服装は？</summary><p>そのままの服装で受けられます。着替えは不要です。</p></details>
+        <details><summary>キャンセルしたいときは？</summary><p>キンさんにインスタのDMで、分かった時点で連絡してください。</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reserve">
+  <div class="wrap">
+    <h2><small>搭乗手続き</small>予約フォーム</h2>
+    <form id="form">
+      <div><label for="name">お名前（ニックネーム可）</label><input type="text" id="name" required></div>
+      <div><label for="date">希望日</label><input type="date" id="date" required></div>
+      <div>
+        <label for="time">希望の時間帯</label>
+        <select id="time" required>
+          <option value="">選んでください</option>
+          <option>午前</option><option>昼</option><option>午後</option><option>夕方</option><option>夜</option>
+        </select>
+      </div>
+      <div><label for="place">やってほしい場所（Basecamp の中で）</label><input type="text" id="place" placeholder="例：フリースペースの奥" required></div>
+      <div>
+        <label for="course">コース</label>
+        <select id="course" required>
+          <option value="">選んでください</option>
+          <option>おごりコース</option><option>お金コース</option><option>ご自由にコース</option>
+        </select>
+      </div>
+      <div>
+        <label for="price">希望金額（お金コースの方・任意）</label>
+        <input type="text" id="price" inputmode="numeric" placeholder="例：500円">
+      </div>
+      <div><label for="memo">力加減の希望・伝えておきたいこと（任意）</label><textarea id="memo" rows="3"></textarea></div>
+      <label class="check"><input type="checkbox" required><span>「詳細」を読み、お受けできない条件にあてはまらないことを確認しました。</span></label>
+      <div><button class="btn" type="submit">予約内容を作る</button></div>
+    </form>
+    <div id="result"></div>
+    <div id="actions">
+      <a class="btn dm" id="dm" href="#" target="_blank" rel="noopener">インスタのDMで送る</a>
+      <button class="btn sub" type="button" id="copy">コピーする</button>
+      <p>押すと<b>予約内容がコピーされ</b>、キンさんのインスタのDM画面が開きます。<b>貼り付けて送信</b>してください。</p>
+      <p>DM画面が開かないときは、<a id="profile" href="#" target="_blank" rel="noopener">キンさんのインスタ（@kinkinkikinkin）</a>からメッセージを送ってください。</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>※ 本サービスは、あん摩マッサージ指圧・はり・きゅう・柔道整復などの国家資格に基づく施術ではありません。</p>
+    <p>※ 個人が Basecamp 利用者向けに行っているものです。大学・施設が提供するサービスではありません。</p>
+    <p>※ イラストは生成AIで作成したものです。</p>
+    <p data-fill="owner"></p>
+  </div>
+</footer>
+
+<script>
+  // ここだけ書き換えれば、ページ全体に反映される
+  const CONFIG = {
+    time: "最大30分",
+    course1: "1つ",
+    course2: "その場で相談",
+    course3: "おまかせ",
+    menu: "手で、頭・首肩・背中・腰・腕・脚をやさしくもみほぐします。",
+    owner: "担当：キンさん（Instagram @kinkinkikinkin）",
+    // 予約の送り先（キンさんのインスタ）
+    instagram: "kinkinkikinkin"
+  };
+  document.querySelectorAll("[data-fill]").forEach(el => { el.textContent = CONFIG[el.dataset.fill]; });
+  document.getElementById("dm").href = "https://ig.me/m/" + CONFIG.instagram;
+  document.getElementById("profile").href = "https://www.instagram.com/" + CONFIG.instagram + "/";
+
+  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 題名は、開いたあとに1行ずつゆっくり出す
+  if (!calm) {
+    document.documentElement.classList.add("wait");
+    setTimeout(() => document.documentElement.classList.remove("wait"), 200);
+  }
+
+  // ロケットは「予約内容を作る」を押したときに1回流す。終わるか、画面を押すと予約内容が出る
+  const intro = document.getElementById("intro");
+  const rocket = document.getElementById("rocket");
+  const form = document.getElementById("form");
+  const result = document.getElementById("result");
+  const actions = document.getElementById("actions");
+  let timer;
+  const showResult = () => {
+    clearTimeout(timer);
+    rocket.pause();
+    intro.hidden = true;
+    result.style.display = "block";
+    actions.style.display = "block";
+    result.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
+  };
+  rocket.addEventListener("ended", showResult);
+  rocket.addEventListener("error", showResult);
+  intro.addEventListener("click", showResult);
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const v = id => document.getElementById(id).value.trim();
+    result.textContent =
+      "【予約】宇宙一のもみほぐし、通称「飛ぶぞ」\n" +
+      "名前：" + v("name") + "\n" +
+      "希望日：" + v("date") + "\n" +
+      "時間帯：" + v("time") + "\n" +
+      "場所：" + v("place") + "\n" +
+      "コース：" + v("course") + "\n" +
+      "希望金額：" + (v("price") || "当日相談") + "\n" +
+      "希望など：" + (v("memo") || "なし") + "\n" +
+      "注意事項：確認済み";
+    if (calm) { showResult(); return; }
+    intro.hidden = false;
+    rocket.currentTime = 0;
+    rocket.play().catch(showResult);
+    timer = setTimeout(showResult, 8000);
+  });
+
+  // インスタのDMは文章を自動で入れられないので、押したときにコピーしてからDM画面を開く
+  document.getElementById("dm").addEventListener("click", () => {
+    navigator.clipboard.writeText(result.textContent).catch(() => {});
+  });
+
+  document.getElementById("copy").addEventListener("click", async e => {
+    try {
+      await navigator.clipboard.writeText(result.textContent);
+      e.target.textContent = "コピーしました";
+    } catch {
+      e.target.textContent = "コピーできませんでした（長押しで選択してください）";
+    }
+  });
+</script>
+</body>
+</html>
