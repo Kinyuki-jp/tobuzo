@@ -181,6 +181,9 @@
   .check { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; font-size: 15px; line-height: 1.7; }
   .check input { width: 22px; height: 22px; margin-top: 3px; accent-color: var(--ink); flex: none; }
   #result { display: none; max-width: 580px; margin-top: 30px; padding: 20px 22px; background: var(--white); border: 3px dashed var(--ink); white-space: pre-wrap; font-size: 15px; }
+  #notyet { display: none; max-width: 580px; margin-top: 30px; padding: 16px 20px; background: var(--star); border: var(--line); box-shadow: var(--pop); font-weight: 700; font-size: 17px; line-height: 1.7; }
+  #notyet b { display: block; font-family: var(--display); font-size: 22px; font-weight: 400; }
+  .note { font-size: 14px; margin: 0; max-width: 580px; }
   #actions { display: none; margin-top: 20px; }
   #actions p { font-size: 14px; margin: 14px 0 0; max-width: 580px; }
   .btn.dm { margin: 0 14px 12px 0; }
@@ -367,12 +370,15 @@
       <div><label for="memo">力加減の希望・伝えておきたいこと（任意）</label><textarea id="memo" rows="3"></textarea></div>
       <label class="check"><input type="checkbox" required><span>「詳細」を読み、お受けできない条件にあてはまらないことを確認しました。</span></label>
       <div><button class="btn" type="submit">予約内容を作る</button></div>
+      <p class="note">※ このボタンを押しただけでは、<b>まだ予約は完了しておりません。</b>このあとインスタのDMで送って、予約完了です。</p>
+      <p class="note">※ 入力した内容は、押した時点でキンさんに送信されます。</p>
     </form>
+    <div id="notyet" role="alert"><b>⚠️ まだ予約は完了しておりません</b>下の「インスタのDMで送る」を押して、キンさんにDMを送ったら予約完了です。</div>
     <div id="result"></div>
     <div id="actions">
       <a class="btn dm" id="dm" href="#" target="_blank" rel="noopener">インスタのDMで送る</a>
       <button class="btn sub" type="button" id="copy">コピーする</button>
-      <p>押すと<b>予約内容がコピーされ</b>、キンさんのインスタのDM画面が開きます。<b>貼り付けて送信</b>してください。</p>
+      <p>押すと<b>予約内容がコピーされ</b>、キンさんのインスタのDM画面が開きます。<b>貼り付けて送信して、予約完了</b>です。</p>
       <p>DM画面が開かないときは、<a id="profile" href="#" target="_blank" rel="noopener">キンさんのインスタ（@kinkinkikinkin）</a>からメッセージを送ってください。</p>
     </div>
   </div>
@@ -397,7 +403,10 @@
     menu: "手で、頭・首肩・背中・腰・腕・脚をやさしくもみほぐします。",
     owner: "担当：キンさん（Instagram @kinkinkikinkin）",
     // 予約の送り先（キンさんのインスタ）
-    instagram: "kinkinkikinkin"
+    instagram: "kinkinkikinkin",
+    // 「予約内容を作る」を押した時点の控えを受け取る Google フォーム（空なら送らない）
+    formUrl: "https://docs.google.com/forms/d/e/1FAIpQLScCDK2bpFeqL94Y1xRjzAjyupcPoW8nRNQjqUrbzOp72DaNzA/formResponse",
+    formEntry: "entry.932319535"
   };
   document.querySelectorAll("[data-fill]").forEach(el => { el.textContent = CONFIG[el.dataset.fill]; });
   document.getElementById("dm").href = "https://ig.me/m/" + CONFIG.instagram;
@@ -422,9 +431,10 @@
     clearTimeout(timer);
     rocket.pause();
     intro.hidden = true;
+    document.getElementById("notyet").style.display = "block";
     result.style.display = "block";
     actions.style.display = "block";
-    result.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
+    document.getElementById("notyet").scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
   };
   rocket.addEventListener("ended", showResult);
   rocket.addEventListener("error", showResult);
@@ -443,6 +453,13 @@
       "希望金額：" + (v("price") || "当日相談") + "\n" +
       "希望など：" + (v("memo") || "なし") + "\n" +
       "注意事項：確認済み";
+    // DMを送り忘れた人の分も見られるように、控えをキンさんへ送る（失敗しても予約の流れは止めない）
+    if (CONFIG.formUrl) {
+      const body = new URLSearchParams();
+      body.set(CONFIG.formEntry, "__other_option__");
+      body.set(CONFIG.formEntry + ".other_option_response", result.textContent);
+      fetch(CONFIG.formUrl, { method: "POST", mode: "no-cors", body }).catch(() => {});
+    }
     if (calm) { showResult(); return; }
     intro.hidden = false;
     rocket.currentTime = 0;
