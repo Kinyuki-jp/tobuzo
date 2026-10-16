@@ -184,7 +184,12 @@
   #notyet { display: none; max-width: 580px; margin-top: 30px; padding: 16px 20px; background: var(--star); border: var(--line); box-shadow: var(--pop); font-weight: 700; font-size: 17px; line-height: 1.7; }
   #notyet b { display: block; font-family: var(--display); font-size: 22px; font-weight: 400; }
   .note { font-size: 14px; margin: 0; max-width: 580px; }
-  .interview { display: block; width: 100%; max-width: 360px; aspect-ratio: 9 / 16; background: var(--ink); border: var(--line); box-shadow: var(--pop); }
+  .interview { display: block; width: 100%; aspect-ratio: 9 / 16; background: var(--ink); border: var(--line); box-shadow: var(--pop); }
+  .hero-top { display: grid; grid-template-columns: 1fr minmax(220px, 280px); gap: 32px; align-items: start; }
+  .hero-top h1 { font-size: clamp(40px, 8vw, 96px); }
+  .hero-video { margin: 0 0 30px; }
+  .hero-video figcaption { font-size: 12px; line-height: 1.6; margin-top: 12px; overflow-wrap: anywhere; }
+  .hero-video figcaption b { display: block; font-size: 15px; margin-bottom: 2px; }
   #actions { display: none; margin-top: 20px; }
   #actions p { font-size: 14px; margin: 14px 0 0; max-width: 580px; }
   .btn.dm { margin: 0 14px 12px 0; }
@@ -194,7 +199,10 @@
   footer p { margin: 0 0 4px; }
 
   @media (max-width: 700px) {
-    .hero .below, .passes { grid-template-columns: 1fr; }
+    .hero .below, .passes, .hero-top { grid-template-columns: 1fr; }
+    .hero-top { gap: 0; }
+    .hero-top h1 { font-size: clamp(40px, 10.5vw, 104px); }
+    .hero-video { width: min(100%, 300px); margin: 0 auto 30px; }
     .what-grid { grid-template-columns: 1fr; gap: 24px; }
     .info { grid-template-columns: 1fr 1fr; }
     .info div:nth-child(3) { border-left: 0; }
@@ -224,8 +232,16 @@
 
 <header class="hero">
   <div class="wrap">
-    <span class="label">手もみ・ボディケア（全身もみほぐし）</span>
-    <h1><span class="ln">宇宙一の</span><span class="ln">もみほぐし、</span><span class="ln"><small>通称</small><span class="fly">飛ぶぞ。</span></span></h1>
+    <div class="hero-top">
+      <div>
+        <span class="label">手もみ・ボディケア（全身もみほぐし）</span>
+        <h1><span class="ln">宇宙一の</span><span class="ln">もみほぐし、</span><span class="ln"><small>通称</small><span class="fly">飛ぶぞ。</span></span></h1>
+      </div>
+      <figure class="hero-video">
+        <video class="interview" src="video/interview.mp4" poster="video/interview.jpg" controls playsinline preload="metadata"></video>
+        <figcaption><b>▶ 乗客インタビュー（34秒）</b>※ 個人の感想です。後半の金額のくだりはネタです。料金はその場で相談して決めます。<br>BGM：魔王魂「アコースティック50」（作曲：森田交一）<a href="https://maou.audio/" target="_blank" rel="noopener">https://maou.audio/</a>／<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a>　効果音：効果音ラボ</figcaption>
+      </figure>
+    </div>
     <figure class="scene">
       <img src="img/hero.webp" width="1536" height="1024" alt="白衣を着た青い宇宙人が、寝そべった緑の宇宙人の背中をほぐしているイラスト">
       <div class="say" aria-hidden="true">飛ぶぞ〜</div>
@@ -313,14 +329,6 @@
   </div>
 </section>
 
-<section style="padding-top:0">
-  <div class="wrap">
-    <h2><small>乗客の声を、そのまま</small>体験談インタビュー</h2>
-    <video class="interview" src="video/interview.mp4" poster="video/interview.jpg" controls playsinline preload="metadata"></video>
-    <p class="note" style="margin-top:14px">※ 個人の感想です。後半の金額のくだりはネタです。料金はその場で相談して決めます。</p>
-    <p class="note">BGM：魔王魂「アコースティック50」（作曲：森田交一）<a href="https://maou.audio/" target="_blank" rel="noopener">https://maou.audio/</a>／<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a>　効果音：効果音ラボ</p>
-  </div>
-</section>
 
 <section style="padding-top:0">
   <div class="wrap">
